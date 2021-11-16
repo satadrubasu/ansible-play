@@ -1,0 +1,8 @@
+- name: Playbook to create self signed certs
+  hosts: target_host_group
+
+  roles:
+    - role: cacerts
+
+
+

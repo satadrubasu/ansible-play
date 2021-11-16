@@ -1,0 +1,24 @@
+---
+# tasks file for cacerts
+- name: 1.1 Generate the CA private key file.
+  openssl_privatekey:
+    path: "./certificates/{{ server_hostname }}_privkey.pem"
+    size: "{{ key_size }}"
+    type: "{{ key_type }}"
+    backup: yes
+
+- name: Generate an OpenSSL Certificate Signing Request with Subject information
+  openssl_csr:
+    path: "./certificates/{{ server_hostname }}.csr"
+    privatekey_path: "./certificates/{{ server_hostname }}_privkey.pem"
+    country_name: "{{ country_name }}"
+    organization_name: "{{ organization_name }}"
+    email_address: "{{ email_address }}"
+    common_name: "{{ server_hostname }}"
+
+- name: Generate a Self Signed OpenSSL certificate
+  openssl_certificate:
+    path: "./certificates/{{ server_hostname }}_cert.pem"
+    privatekey_path: "./certificates/{{ server_hostname }}_privkey.pem"
+    csr_path: "./certificates/{{ server_hostname }}.csr"
+    provider: selfsigned
